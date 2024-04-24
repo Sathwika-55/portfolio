@@ -1,0 +1,60 @@
+// Selecting elements
+const display = document.querySelector('.display');
+const buttons = document.querySelectorAll('.button');
+
+let currentInput = ''; // Variable to store current input
+let calculation = ''; // Variable to store the whole calculation
+
+// Function to update display
+function updateDisplay() {
+    display.textContent = currentInput;
+}
+
+// Function to handle number button clicks
+function handleNumberClick(number) {
+    currentInput += number;
+    updateDisplay();
+}
+
+// Function to handle operator button clicks
+function handleOperatorClick(operator) {
+    if (currentInput !== '') {
+        calculation += currentInput + operator;
+        currentInput = '';
+    } else if (calculation !== '' && '+-*/'.indexOf(calculation.slice(-1)) === -1) {
+        calculation += operator;
+    }
+}
+
+// Function to handle equal button click
+function handleEqualClick() {
+    if (currentInput !== '') {
+        calculation += currentInput;
+        currentInput = eval(calculation);
+        calculation = '';
+        updateDisplay();
+    }
+}
+
+// Function to handle clear button click
+function handleClearClick() {
+    currentInput = '';
+    calculation = '';
+    updateDisplay();
+}
+
+// Adding event listeners to buttons
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const value = button.dataset.value;
+        if (value === 'clear') {
+            handleClearClick();
+        } else if (value === '=') {
+            handleEqualClick();
+        } else if ('+-*/'.indexOf(value) !== -1) {
+            handleOperatorClick(value);
+        } else {
+            handleNumberClick(value);
+        }
+    });
+});
